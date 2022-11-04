@@ -68,8 +68,11 @@ public class JWTAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
   @Override
   protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-                                          Authentication authResult) {
+                                          Authentication authResult) throws IOException {
     response.addHeader(HttpHeaders.AUTHORIZATION, AuthorizationSchemas.BEARER + " " + generateToken(authResult));
+    //TODO This should return DTO
+    UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authResult.getPrincipal();
+    response.getWriter().write(new ObjectMapper().writeValueAsString(userDetailsImpl.user()));
   }
 
   @Override
